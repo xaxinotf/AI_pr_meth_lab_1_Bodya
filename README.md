@@ -193,6 +193,7 @@ python -m src.train_lstm --series_id MT_001 --T 168 --horizon 24 --batch 256 --e
 ---
 
 ### 6.3 Transformer (TFT)
+<img width="1473" height="160" alt="image" src="https://github.com/user-attachments/assets/d84ed5a7-5e9a-49a1-a7ed-16143c0eae5f" />
 
 **Швидкий прогін (мало серій, коротка історія):**
 
