@@ -268,13 +268,13 @@ python -m dash_app.app
 ## 8) Типові помилки / поради
 
 * **Tkinter: `RuntimeError: main thread is not in main loop`**
-  Ми насильно встановили бекенд Matplotlib у `Agg` і відключили будь-яку взаємодію з Tk (`os.environ["MPLBACKEND"]="Agg"` у `train_transformer.py`).
+  Я насильно встановив бекенд Matplotlib у `Agg` і відключив будь-яку взаємодію з Tk (`os.environ["MPLBACKEND"]="Agg"` у `train_transformer.py`).
 
 * **`predict_dataloader` warnings (num\_workers)**
   На Windows залишай `--workers 0` для стабільності.
 
 * **Різні версії `pytorch-forecasting`**
-  У нас: `pytorch_forecasting==1.0.0`. Повернення з `model.predict(return_x=True)` може відрізнятися за довжиною tuple — код це обробляє.
+  У мене: `pytorch_forecasting==1.0.0`. Повернення з `model.predict(return_x=True)` може відрізнятися за довжиною tuple — код це обробляє.
 
 * **Очистити старі логи/виходи**
   Якщо змінив параметри і хочеш “чистий” запуск, прибери:
