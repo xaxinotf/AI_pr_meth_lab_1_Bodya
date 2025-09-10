@@ -17,9 +17,8 @@ REPORTS = ROOT / "reports" / "tables"
 
 def tidy_forecast(df: pd.DataFrame) -> pd.DataFrame:
     """
-    Усунути дублікати за timestamp: агрегуємо mean по числових колонках і сортуємо.
-    Це виправляє випадок, коли багато записів мають однаковий час
-    (наприклад, зберігається лише останній крок горизонту для кількох вікон).
+    Усунути дублікати за timestamp: якщо series_id НЕМає — агрегуємо mean по числових колонках.
+    Якщо series_id Є — НІЧОГО не агрегуємо, повертаємо дані по кожній серії.
     """
     if df is None or df.empty:
         return df
@@ -27,6 +26,11 @@ def tidy_forecast(df: pd.DataFrame) -> pd.DataFrame:
         return df
     df = df.dropna(subset=["timestamp"]).copy()
     df["timestamp"] = pd.to_datetime(df["timestamp"])
+
+    # >>> ключова правка А: якщо є series_id, не агрегуємо!
+    if "series_id" in df.columns:
+        return df.sort_values(["series_id", "timestamp"])
+
     cols = [c for c in ["y_true", "yhat", "yhat_p10", "yhat_p50", "yhat_p90"] if c in df.columns]
     if not cols:
         return df.sort_values("timestamp")
@@ -62,20 +66,14 @@ def load_single_model_pair(model_name: str):
 
     return df_fore, df_metr
 
-def load_transformer_forecast(selected_series: str = None):
+def load_transformer_forecast():
     f = REPORTS / "transformer_MT_all_forecast.csv"
     if not f.exists():
         return None
     df = pd.read_csv(f)
-
-    # якщо є series_id — фільтруємо
-    if selected_series is not None and "series_id" in df.columns:
-        df = df[df["series_id"] == selected_series].copy()
-
     df = tidy_forecast(df)
     df["model"] = "Transformer"
     return df
-
 
 def load_transformer_metrics():
     f = REPORTS / "transformer_MT_all_metrics.csv"
